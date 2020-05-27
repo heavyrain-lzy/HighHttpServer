@@ -29,19 +29,23 @@ Linux下的简易web服务器，实现web端用户注册，登录功能，查看
 
 测试结果
 -------------
-Webbench对服务器进行压力测试，可以实现上万的并发连接.
-> * 并发连接总数：10500
+Webbench对服务器进行压力测试，由于自己的使用的是虚拟机
+只分配了1G的内存和20G的固态，导致Webbench最多fork4500的
+子进程。
+> * 并发连接总数：4500
 > * 访问服务器时间：5s
-> * 每秒钟响应请求数：552852 pages/min
-> * 每秒钟传输数据量：1031990 bytes/sec
+> * 每秒钟响应请求数：404700 pages/min
+> * 每秒钟传输数据量：754969 bytes/sec
 > * 所有访问均成功
 
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/testresult.png" height="201"/> </div>
+<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/explain_webbench.jpg" height="201"/> </div>
 
+<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/pressureTest.jpg" height="201"/> </div>
+<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/tooManyFork.jpg" height="201"/> </div>
 
 框架
 -------------
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/frame.jpg" height="765"/> </div>
+<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/frame.jpg" height="765"/> </div>
 
 
 web端界面
@@ -54,13 +58,13 @@ web端界面
 > * 登录失败提示
 
 
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/home.jpg" height="200"/> 
-	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/regist.jpg" height="200"/>
-	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/registError.jpg" height="200"/></div>
+<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/home.jpg" height="200"/> 
+	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/regist.jpg" height="200"/>
+	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/registError.jpg" height="200"/></div>
 
 <div align=center>        
-	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/log.jpg" height="200"/>        
-	 <img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/source/logError.jpg" height="200"/></div>
+	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/log.jpg" height="200"/>        
+	 <img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/logError.jpg" height="200"/></div>
 
 web端测试
 ------------
