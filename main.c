@@ -9,7 +9,7 @@
 #include <cassert>
 #include <sys/epoll.h>
 
-#include "./lock/locker.h"
+#include "./lock_sem/locker.h"
 #include "./threadpool/threadpool.h"
 #include "./timer/lst_timer.h"
 #include "./http/http_conn.h"

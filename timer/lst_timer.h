@@ -2,7 +2,7 @@
 #define LST_TIMER
 
 #include <time.h>
-#include "../log_sem/log.h"
+#include "../log/log.h"
 
 #define BUFFER_SIZE 64
 class util_timer;

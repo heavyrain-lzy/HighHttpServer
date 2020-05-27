@@ -20,6 +20,7 @@
 #include <sys/wait.h>
 #include <sys/uio.h>
 #include "../lock_sem/locker.h"
+#include"../log/log.h"
 #include "../mysqlpool/sql_connection_pool.h"
 class http_conn
 {
