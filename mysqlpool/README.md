@@ -1,0 +1,15 @@
+
+CGI & 数据库连接池
+===============
+数据库连接池
+> * 单例模式，保证唯一
+> * list实现连接池
+> * 连接池为静态大小
+> * 互斥锁实现线程安全
+
+CGI  
+> * HTTP请求采用POST方式
+> * 登录用户名和密码校验
+> * 用户注册及多线程注册安全
+
+<div align=center><img src="https://github.com/twomonkeyclub/TinyWebServer/blob/master/root/test1.jpg" height="350"/> </div>
