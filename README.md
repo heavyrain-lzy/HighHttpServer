@@ -58,7 +58,8 @@ web端界面
 > * 登录失败提示
 
 
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/home.jpg" height="200"/> 
+![](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/home.jpg)
+<div align=center>
 	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/regist.jpg" height="200"/>
 	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/registError.jpg" height="200"/></div>
 
