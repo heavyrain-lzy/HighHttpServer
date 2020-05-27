@@ -369,7 +369,7 @@ http_conn::HTTP_CODE http_conn::do_request()
     {
 
         //根据标志判断是登录检测还是注册检测
-        char flag = m_url[1];
+        char flag = m_url[1];//2或3
 
         char *m_url_real = (char *)malloc(sizeof(char) * 200);
         strcpy(m_url_real, "/");
@@ -438,8 +438,6 @@ http_conn::HTTP_CODE http_conn::do_request()
 
 //CGI多进程登录校验
 #ifdef CGI
-        //printf("CGI\n");
-        //fd[0]:读管道，fd[1]:写管道
         pid_t pid;
         int pipefd[2];
         if (pipe(pipefd) < 0)
@@ -455,17 +453,18 @@ http_conn::HTTP_CODE http_conn::do_request()
 
         if (pid == 0)
         {
+			//子进程
             //标准输出，文件描述符是1，然后将输出重定向到管道写端
             dup2(pipefd[1],1);
             //关闭管道的读端
             close(pipefd[0]);
-            //父进程去执行cgi程序，m_real_file,name,password为输入
+            //子进程去执行cgi程序，m_real_file,name,password为输入
             //./check.cgi name password
             execl(m_real_file, &flag, name, password, NULL);
         }
         else
         {
-            //子进程关闭写端，打开读端，读取父进程的输出
+            //父进程关闭写端，打开读端，读取子进程的输出
             close(pipefd[1]);
             char result;
             int ret = read(pipefd[0], &result, 1);
@@ -544,7 +543,7 @@ http_conn::HTTP_CODE http_conn::do_request()
     }
     else
         strncpy(m_real_file + len, m_url, FILENAME_LEN - len - 1);
-
+	//获取文件属性
     if (stat(m_real_file, &m_file_stat) < 0)
         return NO_RESOURCE;
     if (!(m_file_stat.st_mode & S_IROTH))

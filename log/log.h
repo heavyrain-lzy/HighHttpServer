@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include "block_queue.h"
 
-//#define  LOG_OPEN
+#define  LOG_OPEN
 
 using namespace std;
 

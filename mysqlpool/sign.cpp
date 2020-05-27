@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         string temp2(row[1]);
         users[temp1] = temp2;
     }
-
+	// ./check.cgi name pswd
     string name(argv[1]);
     const char *namep = name.c_str();
     string passwd(argv[2]);

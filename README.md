@@ -19,7 +19,11 @@ Linux下的简易web服务器，实现web端用户注册，登录功能，查看
 ----------
 - [x] 
 - [x] 
-
+困难点
+----------
+请求较大的视频会出现网页失败情况，并在Firefox不能请求，
+只能在Chrome下请求，观察日志是由于网页会突然重新发送新数据
+具体情况，需要持续更新。
 
 功能说明
 ----------
@@ -67,11 +71,15 @@ web端界面
 	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/log.jpg" height="200"/>        
 	 <img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/logError.jpg" height="200"/></div>
 
+日志关闭
+------------
+可以通过log.h中的宏定义LOG_OPEN来关闭和开启日志	 
+	 
 web端测试
 ------------
 * 服务器测试环境
-	* Ubuntu版本16.04
-	* MySQL版本8.0
+	* Ubuntu版本19.10
+	* MySQL版本8.0.20
 
 * 测试前确认已安装MySQL数据库
 
@@ -93,11 +101,11 @@ web端测试
 * 修改main.c中的数据库初始化信息
 
     ```C++
-    //root root为服务器数据库的登录名和密码
+    //root password为服务器数据库的登录名和密码
     connection_pool *connPool=connection_pool::GetInstance("localhost","root","password","yourdb",3306,5);
     ```
 
-* 修改http_conn.cpp中的root路径
+* 修改http_conn.cpp中的source路径
 
     ```C++
     const char* doc_root="/home/evan/HeighHttpServer/source";
@@ -117,7 +125,7 @@ web端测试
 	* 修改sign.cpp中的数据库初始化信息
 
 	    ```C++
-	    //root root为服务器数据库的登录名和密码
+	    //root password为服务器数据库的登录名和密码
 	    connection_pool *connPool=connection_pool::GetInstance("localhost","root","password","yourdb",3306,5);
 	    ```
 	* 生成check.cgi
