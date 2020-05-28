@@ -5,7 +5,6 @@
 > * 同步I/O模拟Roactor模式
 > * 线程池
 
-<div align=center><img src="https://github.com/twomonkeyclub/TinyWebServer/blob/master/root/test1.jpg" height="350"/> </div>
 
 
 

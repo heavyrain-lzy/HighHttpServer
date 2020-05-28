@@ -4,9 +4,10 @@ HighHttpServer
 ===============
 主要参考了《UNIX网络编程卷1:套接字联网API》《UNIX网络编程卷2:进程间通信》以及更多的参考了游双的
 《Linux高性能服务器编程》，跟陈硕编写的《Linux多线程服务端编程：使用muduoC++网络库》的设计
-思路有部分相同。还正在慢慢学习，争取理解
-Linux下的简易web服务器，实现web端用户注册，登录功能，查看资源
-> * C/C++
+思路有部分相同。还正在慢慢学习。
+Linux下的简易web服务器，实现web端用户注册，登录功能，查看资源。
+注：近期要忙着做实验写论文，但是也忙着秋招，相信大家都能有好的归宿。
+
 > * [RAII包装互斥锁条件变量信号量](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/lock_sem)
 > * [http连接请求处理类](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/http)
 > * [线程池](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/threadpool)
@@ -15,15 +16,27 @@ Linux下的简易web服务器，实现web端用户注册，登录功能，查看
 > * [数据库连接池](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/mysqlpool) 
 > * [Webbench压力测试](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/test_presure)
 
+项目目的
+===============
+1、一方面当然是学习了，看了很多相关的书籍但是没有真正的
+代码入手是不行，所以从书上和网上的资源入手，“攒出”一个项目练手，
+能更加理解书上的内容
+2、自己被实验室老师分配到了相关的公司来做科研和毕设，但是公司的电脑都是
+加密的，当然都是可以通过抄送负责人发送过来，但是自己想着能通过网页
+传递。哈哈，其实我也没用来传数据。
+
 更新日志
 ----------
+- [x] 解决了传输大文件问题--2020.05.28
 - [x] 
-- [x] 
+
+
 困难点
 ----------
-请求较大的视频会出现网页失败情况，并在Firefox不能请求，
+1、请求较大的视频会出现网页失败情况，并在Firefox不能请求，
 只能在Chrome下请求，观察日志是由于网页会突然重新发送新数据
 具体情况，需要持续更新。
+2、epoll的使用机制基本算弄清楚了。
 
 功能说明
 ----------
@@ -46,11 +59,12 @@ Webbench对服务器进行压力测试，由于自己的使用的是虚拟机
 
 <div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/pressureTest.jpg" height="201"/> </div>
 <div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/tooManyFork.jpg" height="201"/> </div>
+如果图片加载失败，请点击缩略图直接查看图片！！！
 
 框架
 -------------
 <div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/frame.jpg" height="765"/> </div>
-
+如果图片加载失败，请点击缩略图直接查看图片！！！
 
 web端界面
 -------------
@@ -61,7 +75,7 @@ web端界面
 > * 登录
 > * 登录失败提示
 
-
+如果图片加载失败，请点击缩略图直接查看图片！！！
 ![](https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/home.jpg)
 <div align=center>
 	<img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/regist.jpg" height="200"/>
@@ -121,6 +135,16 @@ web端测试
 	    9  //CGI多进程登录校验
 	    10 #define CGI
 	    ```
+
+	    * 打开日志
+	    ```C++
+	    在log.h中
+	    #define SYN
+	    ```
+	    * 关闭日志
+	    ```C++
+	    在log.h中
+	     //#define SYN
 	
 	* 修改sign.cpp中的数据库初始化信息
 
@@ -139,16 +163,6 @@ web端测试
 	    cp ./check.cgi ./source
 	    ```
 
-- [x] 同步线程注册/登录校验
-	* 关闭http_conn.cpp中CGI,打开同步线程
-	    
-	    ```C++
-	    6 //同步线程登录校验
-	    7 #define SYN
-
-	    9  //CGI多进程登录校验
-	    10 //#define CGI
-	    ```
 
 * 生成server
 

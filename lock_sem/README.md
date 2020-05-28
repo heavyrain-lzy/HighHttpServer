@@ -7,7 +7,6 @@ RAII线程同步机制包装类
 > * 互斥锁
 > * 条件变量
 
-<div align=center><img src="https://github.com/twomonkeyclub/TinyWebServer/blob/master/root/test1.jpg" height="350"/> </div>
 
 
 

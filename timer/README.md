@@ -5,5 +5,3 @@
 > * 统一事件源
 > * 基于升序链表的定时器
 > * 处理非活动连接
-
-<div align=center><img src="https://github.com/twomonkeyclub/TinyWebServer/blob/master/root/test1.jpg" height="350"/> </div>

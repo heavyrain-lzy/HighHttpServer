@@ -11,5 +11,3 @@ CGI
 > * HTTP请求采用POST方式
 > * 登录用户名和密码校验
 > * 用户注册及多线程注册安全
-
-<div align=center><img src="https://github.com/twomonkeyclub/TinyWebServer/blob/master/root/test1.jpg" height="350"/> </div>

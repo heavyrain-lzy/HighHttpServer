@@ -20,7 +20,7 @@ const char *error_500_title = "Internal Error";
 const char *error_500_form = "There was an unusual problem serving the request file.\n";
 
 //当浏览器出现连接重置时，可能是网站根目录出错或http响应格式出错或者访问的文件中内容完全为空
-const char *doc_root = "/home/evan/TinyWebServer/source";
+const char *doc_root = "/home/evan/HighWebServer/source";
 
 //将表中的用户名和密码放入map
 map<string, string> users;
@@ -28,7 +28,7 @@ map<string, string> users;
 void http_conn::initmysql_result(connection_pool *connPool)
 {
     //先从连接池中取一个连接
-    MYSQL *mysql = connPool->GetConnection();
+    MYSQL *mysql = connPool->GetConnection();//取出一次后就能持续用
 
     //在user表中检索username，passwd数据，浏览器端输入
     if (mysql_query(mysql, "SELECT username,passwd FROM user"))
@@ -53,7 +53,7 @@ void http_conn::initmysql_result(connection_pool *connPool)
         users[temp1] = temp2;
     }
     //将连接归还连接池
-    connPool->ReleaseConnection(mysql);
+    connPool->ReleaseConnection(mysql);//并没有将mysql=NULL；
 }
 //对文件描述符设置非阻塞
 int setnonblocking(int fd)
@@ -85,7 +85,7 @@ void removefd(int epollfd, int fd)
     close(fd);
 }
 
-//将事件重置为EPOLLONESHOT
+//将事件重置为EPOLLONESHOT--EPOLLET
 void modfd(int epollfd, int fd, int ev)
 {
     epoll_event event;
@@ -563,74 +563,140 @@ void http_conn::unmap()
         m_file_address = 0;
     }
 }
+
 bool http_conn::write()
 {
-    int temp = 0;
+	int temp = 0;
 
-    int newadd = 0;
+	if (bytes_to_send == 0)
+	{
+		modfd(m_epollfd, m_sockfd, EPOLLIN);
+		init();
+		return true;
+	}
 
-    if (bytes_to_send == 0)
-    {
-        modfd(m_epollfd, m_sockfd, EPOLLIN);
-        init();
-        return true;
-    }
+	while (1)
+	{
+		//写进socket
+		//第一次调用m_iv[0].base = m_write_buf,m_iv[0].m_iv_count = len;
+		//m_iv[1].base = m_file_address,m_iv[1].m_iv_count = len;
+		temp = writev(m_sockfd, m_iv, m_iv_count);
 
-    while (1)
-    {
-        temp = writev(m_sockfd, m_iv, m_iv_count);
+		if (temp < 0)//写完了或者写缓存区满了
+		{
+			if (errno == EAGAIN)//写完了或者写缓存区满了
+			{
+				modfd(m_epollfd, m_sockfd, EPOLLOUT);//触发一次可以写信号
+				return true;
+			}
+			unmap();
+			return false;
+		}
 
-        if (temp > 0)
-        {
-            bytes_have_send += temp;
-            newadd = bytes_have_send - m_write_idx;
-        }
-        if (temp <= -1)
-        {
-            if (errno == EAGAIN)
-            {
-                if (bytes_have_send >= m_iv[0].iov_len)
-                {
-                    m_iv[0].iov_len = 0;
-                    m_iv[1].iov_base = m_file_address + newadd;
-                    m_iv[1].iov_len = bytes_to_send;
-                }
-                else
-                {
-                    m_iv[0].iov_base = m_write_buf + bytes_to_send;
-                    m_iv[0].iov_len = m_iv[0].iov_len - bytes_have_send;
-                }
-                modfd(m_epollfd, m_sockfd, EPOLLOUT);
-                return true;
-            }
-            unmap();
-            return false;
-        }
-        bytes_to_send -= temp;
-        if (bytes_to_send <= 0)
+		bytes_have_send += temp;
+		bytes_to_send -= temp;
+		//每次发送成功后要更新m_iv
+		if (bytes_have_send >= m_iv[0].iov_len)//
+		{
+			m_iv[0].iov_len = 0;
+			m_iv[1].iov_base = m_file_address + (bytes_have_send - m_write_idx);
+			m_iv[1].iov_len = bytes_to_send;
+		}
+		else
+		{
+			m_iv[0].iov_base = m_write_buf + bytes_have_send;
+			m_iv[0].iov_len = m_iv[0].iov_len - bytes_have_send;
+		}
 
-        {
-            unmap();
-            if (m_linger)
-            {
-                init();
-                modfd(m_epollfd, m_sockfd, EPOLLIN);
-                return true;
-            }
-            else
-            {
-                modfd(m_epollfd, m_sockfd, EPOLLIN);
-                return false;
-            }
-        }
-    }
+		if (bytes_to_send <= 0)
+		{
+			unmap();
+			modfd(m_epollfd, m_sockfd, EPOLLIN);
+
+			if (m_linger)
+			{
+				init();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 }
+
+
+////bool http_conn::write()
+//{
+//    int temp = 0;
+//
+//    int newadd = 0;
+//
+//    if (bytes_to_send == 0)
+//    {
+//        modfd(m_epollfd, m_sockfd, EPOLLIN);
+//        init();
+//        return true;
+//    }
+//
+//    while (1)
+//    {
+//        temp = writev(m_sockfd, m_iv, m_iv_count);
+//
+//        if (temp > 0)
+//        {
+//            bytes_have_send += temp;
+//            newadd = bytes_have_send - m_write_idx;
+//        }
+//        if (temp <= -1)
+//        {
+//            if (errno == EAGAIN)
+//            {
+//                if (bytes_have_send >= m_iv[0].iov_len)
+//                {
+//                    m_iv[0].iov_len = 0;
+//                    m_iv[1].iov_base = m_file_address + newadd;
+//                    m_iv[1].iov_len = bytes_to_send;
+//                }
+//                else
+//                {
+//                    m_iv[0].iov_base = m_write_buf + bytes_to_send;
+//                    m_iv[0].iov_len = m_iv[0].iov_len - bytes_have_send;
+//                }
+//                modfd(m_epollfd, m_sockfd, EPOLLOUT);
+//                return true;
+//            }
+//            unmap();
+//            return false;
+//        }
+//        bytes_to_send -= temp;
+//        if (bytes_to_send <= 0)
+//
+//        {
+//            unmap();
+//            if (m_linger)
+//            {
+//                init();
+//                modfd(m_epollfd, m_sockfd, EPOLLIN);
+//                return true;
+//            }
+//            else
+//            {
+//                modfd(m_epollfd, m_sockfd, EPOLLIN);
+//                return false;
+//            }
+//        }
+//    }
+//}
+//把反馈输出到log文件，消息存入m_wirte_buf->输出到log文件
 bool http_conn::add_response(const char *format, ...)
 {
     if (m_write_idx >= WRITE_BUFFER_SIZE)
         return false;
     va_list arg_list;
     va_start(arg_list, format);
+	//更新m_write_buf --m_write_idx初始为0
     int len = vsnprintf(m_write_buf + m_write_idx, WRITE_BUFFER_SIZE - 1 - m_write_idx, format, arg_list);
     if (len >= (WRITE_BUFFER_SIZE - 1 - m_write_idx))
     {

@@ -34,8 +34,3 @@ Webbench对服务器进行压力测试，由于自己的使用的是虚拟机
 > * 每秒钟响应请求数：404700 pages/min
 > * 每秒钟传输数据量：754969 bytes/sec
 > * 所有访问均成功
-
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/explain_webbench.jpg" height="201"/> </div>
-
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/pressureTest.jpg" height="201"/> </div>
-<div align=center><img src="https://github.com/heavyrain-lzy/HighHttpServer/tree/master/interface/tooManyFork.jpg" height="201"/> </div>

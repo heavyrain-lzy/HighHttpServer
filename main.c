@@ -140,10 +140,10 @@ int main(int argc, char *argv[])
     epoll_event events[MAX_EVENT_NUMBER];
     int epollfd = epoll_create(5);
     assert(epollfd != -1);
-    addfd(epollfd, listenfd, false,false);//阻塞了
+    addfd(epollfd, listenfd, false,false);//LT模式
     http_conn::m_epollfd = epollfd;
 
-    //创建一对相互连接的管道--一个写一个读,接收操作系统信号
+    //创建一对相互连接的管道--一个写一个读,接收操作系统信号--全双工有名管道
     ret = socketpair(PF_UNIX, SOCK_STREAM, 0, pipefd);//PF_UNIX接收操作系统信号
     assert(ret != -1);
     setnonblocking(pipefd[1]);
