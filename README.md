@@ -141,7 +141,7 @@ web端测试
 	    * 关闭日志
 	    ```C++
 	    在log.h中
-	     //#define SYN
+	     //#define LOG_OPEN
 	
 	* 修改sign.cpp中的数据库初始化信息
 
